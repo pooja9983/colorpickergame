@@ -1,0 +1,166 @@
+----------------color picker game.html---------------------
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ColorGame</title>
+    <link rel="stylesheet" type="text/css" href="colorpicker.css">
+</head>
+<body>
+    <h1>ColorPicker</h1>
+    <br>
+    <span id="targetcolor"></span><br>
+    <center>
+        <div id="stripe">
+            <button id="NewColor">new color</button>
+            <span id="message"></span>
+        </div>
+    </center>
+    <div class="container">
+        <div class="square"></div>
+        <div class="square"></div>
+        <div class="square"></div>
+        <div class="square"></div>
+        <div class="square"></div>
+        <div class="square"></div>
+    </div>
+    <script type="text/javascript" src="colorpicker.js"></script>
+</body>
+</html>
+-----------------------color picker game .css---------------------------
+h1 {
+    color: white;
+    background-color: steelblue;
+    text-align: center;
+    font-weight: normal;
+    text-transform: uppercase;
+    padding: 20px 0;
+    font-size: 24px; /* Added font size */
+}
+
+body {
+    background-color: black;
+    margin: 0;
+    font-family: "arial";
+}
+
+#targetcolor {
+    font-size: 200%;
+}
+
+button {
+    border: none;
+    background-color: white;
+    text-transform: uppercase;
+    height: 100%;
+    font-weight: 700;
+    color: steelblue;
+    letter-spacing: 1px;
+    font-size: inherit;
+    transition: all 0.3s;
+}
+
+button:hover {
+    color: white;
+    background-color: steelblue;
+}
+
+.square {
+    background-color: red;
+    width: 12%;
+    margin: 1.66%;
+    float: left;
+    padding-bottom: 30%; /* Added unit (e.g., %) */
+    border-radius: 30%;
+    transition:background 0.7s;
+}
+
+.container {
+    margin: 20px auto;
+    max-width: 600px;
+}
+
+#stripe {
+    text-align: center;
+    background-color: white;
+    /* Removed padding: auto 0; */
+}
+
+#message {
+    font-family: "arial";
+    text-transform: uppercase;
+    height: 100px; /* Added unit (e.g., px) */
+    font-weight: 700;
+-----------------color picker game.js---------------------
+var noOfSquares = 6;
+var arr = [];
+var picked;
+var squares = document.getElementsByClassName("square");
+var targetColor = document.getElementById("targetcolor"); // Fixed typo
+var message = document.getElementById("message"); // Fixed typo
+var head = document.querySelector("h1"); // Fixed typo
+var reset = document.getElementById("reset"); // Make sure you have an element with id="reset"
+
+init();
+
+function init() {
+    arr = generateRandomColor(noOfSquares);
+    picked = arr[randomPickedColorIndex()];
+    targetColor.textContent = picked;
+
+    for (var i = 0; i < squares.length; i++) {
+        squares[i].style.backgroundColor = arr[i];
+        squares[i].addEventListener("click", function () {
+            if (picked === this.style.backgroundColor) {
+                message.textContent = "Correct!";
+                message.style.color = "green";
+                changeColor(this.style.backgroundColor);
+                reset.textContent = "Play Again?";
+            } else {
+                message.textContent = "Try Again";
+                message.style.color = "red";
+                this.style.backgroundColor = "#232323";
+            }
+        });
+    }
+}
+
+reset.addEventListener("click", resetIn);
+
+function randomPickedColorIndex() {
+    return Math.floor(Math.random() * arr.length);
+}
+
+function generateRandomColor(limit) {
+    var colors = [];
+    for (var i = 0; i < limit; i++) {
+colors.push(rgbGenerator());
+    }
+    return colors;
+}
+
+function rgbGenerator() {
+      var r = Math.floor(Math.random() * 256);
+    var g = Math.floor(Math.random() * 256);
+    var b = Math.floor(Math.random() * 256);
+    return "rgb(" + r + ", " + g + ", " + b + ")";
+}
+
+function changeColor(color) {
+    for (var i = 0; i < squares.length; i++) {
+        squares[i].style.backgroundColor = color;
+    }
+    head.style.backgroundColor = color;
+}
+
+function resetIn() {
+    arr = generateRandomColor(noOfSquares);
+    picked = arr[randomPickedColorIndex()];
+    targetColor.textContent = picked;
+    message.textContent = "";
+    head.style.backgroundColor = "steelblue";
+    for (var i = 0; i < squares.length; i++) {
+        squares[i].style.backgroundColor = arr[i];
+    }
+    reset.textContent = "New Colors"; // Change the button text back to "New Colors"
+}
+-----------------end-------------------
